@@ -6,6 +6,8 @@ import org.junit.Test;
 
 public class GildedRoseTest {
 
+    private final GildedRose app = new GildedRose(new Item[0]);
+
     @Test
     public void ordinary_items_decrease_in_quality_one_per_day_up_to_expiry() {
         checkOneUpdate("foo", 1, 42, 0, 41);
@@ -39,8 +41,7 @@ public class GildedRoseTest {
 
     private void checkOneUpdate(String itemName, int sellIn, int quality, int expectedSellIn, int expectedQuality) {
         Item item = new Item(itemName, sellIn, quality);
-        GildedRose app = new GildedRose(new Item[] {item});
-        app.updateQuality();
+        app.update(item);
         assertEquals(expectedSellIn, item.sellIn);
         assertEquals(expectedQuality, item.quality);
     }
