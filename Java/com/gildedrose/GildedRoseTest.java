@@ -21,6 +21,7 @@ public class GildedRoseTest {
     @Test
     public void Aged_Brie_increases_in_quality_up_to_50() {
         checkOneUpdate(item("Aged Brie", 1, 42), 0, 43);
+//        checkOneUpdate(item("Aged Brie", 0, 43), -1, 44);
         checkOneUpdate(item("Aged Brie", -10, 49), -11, 50);
         checkOneUpdate(item("Aged Brie", -11, 50), -12, 50);
     }
