@@ -15,7 +15,10 @@ class GildedRose {
 
     void update(Item item) {
         String name = item.name;
-        ageItem(item, name);
+        ItemType type = typeOf(item);
+
+        type.ageing.apply(item);
+
         if (name.equals("Aged Brie")) {
             item.quality = item.quality + 1;
         } else if (name.equals("Backstage passes to a TAFKAL80ETC concert")) {
@@ -57,10 +60,32 @@ class GildedRose {
         return item.sellIn < 0;
     }
 
-    private void ageItem(Item item, String name) {
-        Ageing ageing = name.equals("Sulfuras, Hand of Ragnaros") ? Ageing.NoAgeing: Ageing.StandardAgeing;
-        ageing.apply(item);
+    enum ItemType {
+        Sulfuras(Ageing.NoAgeing),
+        Brie(Ageing.StandardAgeing),
+        Pass(Ageing.StandardAgeing),
+        Other(Ageing.StandardAgeing);
+
+        private final Ageing ageing;
+
+        ItemType(Ageing ageing) {
+
+            this.ageing = ageing;
+        }
     }
+
+    private ItemType typeOf(Item item) {
+        String name = item.name;
+        if (name.equals("Sulfuras, Hand of Ragnaros"))
+            return ItemType.Sulfuras;
+        if (name.equals("Aged Brie"))
+            return ItemType.Brie;
+        if (name.equals("Backstage passes to a TAFKAL80ETC concert"))
+            return ItemType.Pass;
+        return ItemType.Other;
+    }
+
+
 
     enum Ageing {
         StandardAgeing(1),
