@@ -14,11 +14,18 @@ class GildedRose {
     }
 
     void update(Item item) {
-        ItemType type = typeOf(item);
+        typeOf(item).update(item);
+    }
 
-        type.ageing.apply(item);
-        type.degradation.apply(item);
-        type.saturation.apply(item);
+    private ItemType typeOf(Item item) {
+        String name = item.name;
+        if (name.equals("Sulfuras, Hand of Ragnaros"))
+            return ItemType.Sulfuras;
+        if (name.equals("Aged Brie"))
+            return ItemType.Brie;
+        if (name.equals("Backstage passes to a TAFKAL80ETC concert"))
+            return ItemType.Pass;
+        return ItemType.Other;
     }
 
     enum ItemType {
@@ -36,17 +43,12 @@ class GildedRose {
             this.degradation = degradation;
             this.saturation = saturation;
         }
-    }
 
-    private ItemType typeOf(Item item) {
-        String name = item.name;
-        if (name.equals("Sulfuras, Hand of Ragnaros"))
-            return ItemType.Sulfuras;
-        if (name.equals("Aged Brie"))
-            return ItemType.Brie;
-        if (name.equals("Backstage passes to a TAFKAL80ETC concert"))
-            return ItemType.Pass;
-        return ItemType.Other;
+        public void update(Item item) {
+            ageing.apply(item);
+            degradation.apply(item);
+            saturation.apply(item);
+        }
     }
 
     enum Ageing {
@@ -91,7 +93,6 @@ class GildedRose {
             }
         },
         Standard {
-            @Override
             public void apply(Item item) {
                 item.quality = item.quality - 1;
                 if (pastSellBy(item))
