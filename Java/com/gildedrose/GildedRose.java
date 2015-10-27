@@ -14,14 +14,13 @@ class GildedRose {
     }
 
     void update(Item item) {
-        String name = item.name;
         ItemType type = typeOf(item);
 
         type.ageing.apply(item);
 
-        if (name.equals("Aged Brie")) {
+        if (type == ItemType.Brie) {
             item.quality = item.quality + 1;
-        } else if (name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+        } else if (type == ItemType.Pass) {
             item.quality = item.quality + 1;
 
             if (item.sellIn < 10) {
@@ -33,24 +32,24 @@ class GildedRose {
             }
 
         } else {
-            if (!name.equals("Sulfuras, Hand of Ragnaros")) {
+            if (type != ItemType.Sulfuras) {
                 item.quality = item.quality - 1;
             }
         }
         if (pastSellBy(item)) {
-            if (name.equals("Aged Brie")) {
+            if (type == ItemType.Brie) {
                 item.quality = item.quality + 1;
             } else {
-                if (name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                if (type == ItemType.Pass) {
                     item.quality = 0;
-                } else if (!name.equals("Sulfuras, Hand of Ragnaros")) {
+                } else if (type != ItemType.Sulfuras) {
                     item.quality = item.quality - 1;
                 }
 
             }
         }
 
-        if (item.quality > 50 && !name.equals("Sulfuras, Hand of Ragnaros"))
+        if (item.quality > 50 && type != ItemType.Sulfuras)
             item.quality = 50;
         if (item.quality < 0)
             item.quality = 0;
