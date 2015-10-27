@@ -20,6 +20,9 @@ class GildedRose {
 
         if (type == ItemType.Brie) {
             item.quality = item.quality + 1;
+            if (pastSellBy(item)) {
+                item.quality = item.quality + 1;
+            }
         } else if (type == ItemType.Pass) {
             item.quality = item.quality + 1;
 
@@ -31,22 +34,13 @@ class GildedRose {
                 item.quality = item.quality + 1;
             }
 
-        } else {
-            if (type != ItemType.Sulfuras) {
-                item.quality = item.quality - 1;
-            }
-        }
-        if (pastSellBy(item)) {
-            if (type == ItemType.Brie) {
-                item.quality = item.quality + 1;
-            } else {
-                if (type == ItemType.Pass) {
-                    item.quality = 0;
-                } else if (type != ItemType.Sulfuras) {
-                    item.quality = item.quality - 1;
-                }
+            if (pastSellBy(item))
+                item.quality = 0;
 
-            }
+        } else if (type != ItemType.Sulfuras) {
+            item.quality = item.quality - 1;
+            if (pastSellBy(item))
+                item.quality = item.quality - 1;
         }
 
         type.saturation.apply(item);
