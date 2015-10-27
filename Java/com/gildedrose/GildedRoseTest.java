@@ -25,7 +25,7 @@ public class GildedRoseTest {
 
     @Test
     public void Sulfuras_doesnt_degrade() {
-        checkOneUpdate("Sulfuras, Hand of Ragnaros", 1, 42, 1, 42);
+        checkOneUpdate("Sulfuras, Hand of Ragnaros", 1, 80, 1, 80);
     }
 
     @Test
