@@ -58,8 +58,22 @@ class GildedRose {
     }
 
     private void ageItem(Item item, String name) {
-        if (!name.equals("Sulfuras, Hand of Ragnaros")) {
-            item.sellIn = item.sellIn - 1;
+        Ageing ageing = name.equals("Sulfuras, Hand of Ragnaros") ? Ageing.NoAgeing: Ageing.StandardAgeing;
+        ageing.apply(item);
+    }
+
+    enum Ageing {
+        StandardAgeing(1),
+        NoAgeing(0);
+
+        public void apply(Item item) {
+            item.sellIn = item.sellIn - sellInChangePerDay;
+        }
+
+        private final int sellInChangePerDay;
+
+        Ageing(int sellInChangePerDay) {
+            this.sellInChangePerDay = sellInChangePerDay;
         }
     }
 }
