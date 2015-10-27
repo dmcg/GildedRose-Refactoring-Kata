@@ -40,6 +40,12 @@ public class GildedRoseTest {
         checkOneUpdate(item("Backstage passes to a TAFKAL80ETC concert", 0, 15), -1, 0);
     }
 
+    @Test
+    public void Conjured_degrade_twice_as_fast_as_usual() {
+        checkOneUpdate(item("Conjured", 2, 42), 1, 40);
+        checkOneUpdate(item("Conjured", 0, 42), -1, 38);
+    }
+
     private void checkOneUpdate(Item item, int expectedSellIn, int expectedQuality) {
         app.update(item);
         assertEquals(expectedSellIn, item.sellIn);

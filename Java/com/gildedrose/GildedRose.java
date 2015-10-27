@@ -25,6 +25,8 @@ class GildedRose {
             return ItemType.Brie;
         if (name.equals("Backstage passes to a TAFKAL80ETC concert"))
             return ItemType.Pass;
+        if (name.startsWith("Conjured"))
+            return ItemType.Conjured;
         return ItemType.Other;
     }
 
@@ -32,6 +34,7 @@ class GildedRose {
         Sulfuras(Ageing.NoAgeing, Degradation.Sulfuras, Saturation.NoSaturation),
         Brie(Ageing.StandardAgeing, Degradation.BetterWithTime, Saturation.Standard),
         Pass(Ageing.StandardAgeing, Degradation.Pass, Saturation.Standard),
+        Conjured(Ageing.StandardAgeing, Degradation.Conjured, Saturation.Standard),
         Other(Ageing.StandardAgeing, Degradation.Standard, Saturation.Standard);
 
         private final Ageing ageing;
@@ -98,6 +101,14 @@ class GildedRose {
                 if (pastSellBy(item))
                     item.quality = item.quality - 1;
             }
+        },
+        Conjured {
+            public void apply(Item item) {
+                item.quality = item.quality - 2;
+                if (pastSellBy(item))
+                    item.quality = item.quality - 2;
+            }
+
         };
 
         private static boolean pastSellBy(Item item) {
