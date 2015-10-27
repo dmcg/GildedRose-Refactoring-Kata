@@ -17,50 +17,23 @@ class GildedRose {
         ItemType type = typeOf(item);
 
         type.ageing.apply(item);
-
-        if (type == ItemType.Brie) {
-            item.quality = item.quality + 1;
-            if (pastSellBy(item)) {
-                item.quality = item.quality + 1;
-            }
-        } else if (type == ItemType.Pass) {
-            item.quality = item.quality + 1;
-
-            if (item.sellIn < 10) {
-                item.quality = item.quality + 1;
-            }
-
-            if (item.sellIn < 5) {
-                item.quality = item.quality + 1;
-            }
-
-            if (pastSellBy(item))
-                item.quality = 0;
-
-        } else if (type != ItemType.Sulfuras) {
-            item.quality = item.quality - 1;
-            if (pastSellBy(item))
-                item.quality = item.quality - 1;
-        }
-
+        type.degradation.apply(item);
         type.saturation.apply(item);
     }
 
-    private boolean pastSellBy(Item item) {
-        return item.sellIn < 0;
-    }
-
     enum ItemType {
-        Sulfuras(Ageing.NoAgeing, Saturation.NoSaturation),
-        Brie(Ageing.StandardAgeing, Saturation.Standard),
-        Pass(Ageing.StandardAgeing, Saturation.Standard),
-        Other(Ageing.StandardAgeing, Saturation.Standard);
+        Sulfuras(Ageing.NoAgeing, Degradation.Sulfuras, Saturation.NoSaturation),
+        Brie(Ageing.StandardAgeing, Degradation.BetterWithTime, Saturation.Standard),
+        Pass(Ageing.StandardAgeing, Degradation.Pass, Saturation.Standard),
+        Other(Ageing.StandardAgeing, Degradation.Standard, Saturation.Standard);
 
         private final Ageing ageing;
+        private final Degradation degradation;
         private final Saturation saturation;
 
-        ItemType(Ageing ageing, Saturation saturation) {
+        ItemType(Ageing ageing, Degradation degradation, Saturation saturation) {
             this.ageing = ageing;
+            this.degradation = degradation;
             this.saturation = saturation;
         }
     }
@@ -89,6 +62,48 @@ class GildedRose {
         Ageing(int sellInChangePerDay) {
             this.sellInChangePerDay = sellInChangePerDay;
         }
+    }
+
+    enum Degradation {
+        Sulfuras,
+        BetterWithTime {
+            public void apply(Item item) {
+                item.quality = item.quality + 1;
+                if (pastSellBy(item)) {
+                    item.quality = item.quality + 1;
+                }
+            }
+        },
+        Pass {
+            public void apply(Item item) {
+                item.quality = item.quality + 1;
+
+                if (item.sellIn < 10) {
+                    item.quality = item.quality + 1;
+                }
+
+                if (item.sellIn < 5) {
+                    item.quality = item.quality + 1;
+                }
+
+                if (pastSellBy(item))
+                    item.quality = 0;
+            }
+        },
+        Standard {
+            @Override
+            public void apply(Item item) {
+                item.quality = item.quality - 1;
+                if (pastSellBy(item))
+                    item.quality = item.quality - 1;
+            }
+        };
+
+        private static boolean pastSellBy(Item item) {
+            return item.sellIn < 0;
+        }
+
+        public void apply(Item item) {}
     }
 
     enum Saturation {
