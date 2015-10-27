@@ -16,6 +16,13 @@ public class GildedRoseTest {
         checkOneUpdate("foo", 0, 42, 40);
     }
 
+    @Test
+    public void Aged_Brie_increases_in_quality_up_to_50() {
+        checkOneUpdate("Aged Brie", 1, 42, 43);
+        checkOneUpdate("Aged Brie", -10, 49, 50);
+        checkOneUpdate("Aged Brie", -11, 50, 50);
+    }
+
     private void checkOneUpdate(String itemName, int sellIn, int quality, int expectedQuality) {
         Item item = new Item(itemName, sellIn, quality);
         GildedRose app = new GildedRose(new Item[] {item});
