@@ -49,10 +49,7 @@ class GildedRose {
             }
         }
 
-        if (item.quality > 50 && type != ItemType.Sulfuras)
-            item.quality = 50;
-        if (item.quality < 0)
-            item.quality = 0;
+        type.saturation.apply(item);
     }
 
     private boolean pastSellBy(Item item) {
@@ -60,16 +57,17 @@ class GildedRose {
     }
 
     enum ItemType {
-        Sulfuras(Ageing.NoAgeing),
-        Brie(Ageing.StandardAgeing),
-        Pass(Ageing.StandardAgeing),
-        Other(Ageing.StandardAgeing);
+        Sulfuras(Ageing.NoAgeing, Saturation.NoSaturation),
+        Brie(Ageing.StandardAgeing, Saturation.Standard),
+        Pass(Ageing.StandardAgeing, Saturation.Standard),
+        Other(Ageing.StandardAgeing, Saturation.Standard);
 
         private final Ageing ageing;
+        private final Saturation saturation;
 
-        ItemType(Ageing ageing) {
-
+        ItemType(Ageing ageing, Saturation saturation) {
             this.ageing = ageing;
+            this.saturation = saturation;
         }
     }
 
@@ -84,8 +82,6 @@ class GildedRose {
         return ItemType.Other;
     }
 
-
-
     enum Ageing {
         StandardAgeing(1),
         NoAgeing(0);
@@ -99,5 +95,19 @@ class GildedRose {
         Ageing(int sellInChangePerDay) {
             this.sellInChangePerDay = sellInChangePerDay;
         }
+    }
+
+    enum Saturation {
+        Standard {
+            public void apply(Item item) {
+                if (item.quality > 50)
+                    item.quality = 50;
+                if (item.quality < 0)
+                    item.quality = 0;
+            }
+        },
+        NoSaturation;
+
+        public void apply(Item item) {}
     }
 }
