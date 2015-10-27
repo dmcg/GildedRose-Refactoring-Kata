@@ -15,16 +15,17 @@ class GildedRose {
 
     void update(Item item) {
         String name = item.name;
+        ageItem(item, name);
         if (name.equals("Aged Brie")) {
             item.quality = item.quality + 1;
         } else if (name.equals("Backstage passes to a TAFKAL80ETC concert")) {
             item.quality = item.quality + 1;
 
-            if (item.sellIn < 11) {
+            if (item.sellIn < 10) {
                 item.quality = item.quality + 1;
             }
 
-            if (item.sellIn < 6) {
+            if (item.sellIn < 5) {
                 item.quality = item.quality + 1;
             }
 
@@ -33,9 +34,6 @@ class GildedRose {
                 item.quality = item.quality - 1;
             }
         }
-
-        ageItem(item, name);
-
         if (pastSellBy(item)) {
             if (name.equals("Aged Brie")) {
                 item.quality = item.quality + 1;
