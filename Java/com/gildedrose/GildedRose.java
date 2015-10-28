@@ -1,5 +1,10 @@
 package com.gildedrose;
 
+import static com.gildedrose.GildedRose.Ageing.NoAgeing;
+import static com.gildedrose.GildedRose.Ageing.StandardAgeing;
+import static com.gildedrose.GildedRose.Degradation.*;
+import static com.gildedrose.GildedRose.Saturation.NoSaturation;
+
 class GildedRose {
     Item[] items;
 
@@ -31,11 +36,17 @@ class GildedRose {
     }
 
     enum ItemType {
-        Sulfuras(Ageing.NoAgeing, Degradation.Sulfuras, Saturation.NoSaturation),
-        Brie(Ageing.StandardAgeing, Degradation.BetterWithTime, Saturation.Standard),
-        Pass(Ageing.StandardAgeing, Degradation.Pass, Saturation.Standard),
-        Conjured(Ageing.StandardAgeing, Degradation.Conjured, Saturation.Standard),
-        Other(Ageing.StandardAgeing, Degradation.Standard, Saturation.Standard);
+        Sulfuras(NoAgeing, NoDegradation, NoSaturation),
+        Brie(StandardAgeing, BetterWithTime, Saturation.StandardSaturation),
+        Pass(StandardAgeing, PassDegradation, Saturation.StandardSaturation),
+        Conjured(StandardAgeing, ConjuredDegragation, Saturation.StandardSaturation),
+        Other(StandardAgeing, StandardSaturation, Saturation.StandardSaturation);
+
+        public void update(Item item) {
+            ageing.apply(item);
+            degradation.apply(item);
+            saturation.apply(item);
+        }
 
         private final Ageing ageing;
         private final Degradation degradation;
@@ -45,12 +56,6 @@ class GildedRose {
             this.ageing = ageing;
             this.degradation = degradation;
             this.saturation = saturation;
-        }
-
-        public void update(Item item) {
-            ageing.apply(item);
-            degradation.apply(item);
-            saturation.apply(item);
         }
     }
 
@@ -70,7 +75,7 @@ class GildedRose {
     }
 
     enum Degradation {
-        Sulfuras,
+        NoDegradation,
         BetterWithTime {
             public void apply(Item item) {
                 item.quality = item.quality + 1;
@@ -79,7 +84,7 @@ class GildedRose {
                 }
             }
         },
-        Pass {
+        PassDegradation {
             public void apply(Item item) {
                 item.quality = item.quality + 1;
 
@@ -95,14 +100,14 @@ class GildedRose {
                     item.quality = 0;
             }
         },
-        Standard {
+        StandardSaturation {
             public void apply(Item item) {
                 item.quality = item.quality - 1;
                 if (pastSellBy(item))
                     item.quality = item.quality - 1;
             }
         },
-        Conjured {
+        ConjuredDegragation {
             public void apply(Item item) {
                 item.quality = item.quality - 2;
                 if (pastSellBy(item))
@@ -119,7 +124,7 @@ class GildedRose {
     }
 
     enum Saturation {
-        Standard {
+        StandardSaturation {
             public void apply(Item item) {
                 if (item.quality > 50)
                     item.quality = 50;
