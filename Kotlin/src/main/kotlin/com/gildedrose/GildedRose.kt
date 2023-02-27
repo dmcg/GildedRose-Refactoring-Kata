@@ -19,23 +19,16 @@ private fun Item.update() {
 
     when (name) {
         "Aged Brie" -> {
-            degrade(-1)
-            if (sellIn < 0) {
-                degrade(-1)
-            }
+            degrade(if (sellIn < 0) -2 else -1)
         }
 
         "Backstage passes to a TAFKAL80ETC concert" -> {
-            if (quality < 50) {
-                quality = quality + 1
-
-                if (sellIn < 10) {
-                    degrade(-1)
-                }
-
-                if (sellIn < 5) {
-                    degrade(-1)
-                }
+            degrade(-1)
+            if (sellIn < 10) {
+                degrade(-1)
+            }
+            if (sellIn < 5) {
+                degrade(-1)
             }
             if (sellIn < 0) {
                 quality = 0
@@ -46,10 +39,9 @@ private fun Item.update() {
         }
 
         else -> {
-            degrade(1)
-            if (sellIn < 0) {
-                degrade(1)
-            }
+            degrade(
+                if (sellIn < 0) 2 else 1
+            )
         }
     }
 }
