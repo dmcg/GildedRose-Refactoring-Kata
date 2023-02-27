@@ -19,9 +19,9 @@ private fun Item.update() {
 
     when (name) {
         "Aged Brie" -> {
-            increment()
+            degrade(-1)
             if (sellIn < 0) {
-                increment()
+                degrade(-1)
             }
         }
 
@@ -30,11 +30,11 @@ private fun Item.update() {
                 quality = quality + 1
 
                 if (sellIn < 10) {
-                    increment()
+                    degrade(-1)
                 }
 
                 if (sellIn < 5) {
-                    increment()
+                    degrade(-1)
                 }
             }
             if (sellIn < 0) {
@@ -46,24 +46,17 @@ private fun Item.update() {
         }
 
         else -> {
-            decrement()
+            degrade(1)
             if (sellIn < 0) {
-                decrement()
+                degrade(1)
             }
         }
     }
 }
 
-private fun Item.decrement() {
-    if (quality > 0) {
-        quality = quality - 1
-    }
-}
-
-private fun Item.increment() {
-    if (quality < 50) {
-        quality = quality + 1
-    }
+private fun Item.degrade(i: Int) {
+    val newValue = quality - i
+    quality = newValue.coerceIn(0, 50)
 }
 
 
