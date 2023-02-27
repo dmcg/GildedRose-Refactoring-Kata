@@ -19,13 +19,9 @@ private fun Item.update() {
 
     when (name) {
         "Aged Brie" -> {
-            if (quality < 50) {
-                quality = quality + 1
-            }
+            increment()
             if (sellIn < 0) {
-                if (quality < 50) {
-                    quality = quality + 1
-                }
+                increment()
             }
         }
 
@@ -34,15 +30,11 @@ private fun Item.update() {
                 quality = quality + 1
 
                 if (sellIn < 10) {
-                    if (quality < 50) {
-                        quality = quality + 1
-                    }
+                    increment()
                 }
 
                 if (sellIn < 5) {
-                    if (quality < 50) {
-                        quality = quality + 1
-                    }
+                    increment()
                 }
             }
             if (sellIn < 0) {
@@ -54,15 +46,23 @@ private fun Item.update() {
         }
 
         else -> {
-            if (quality > 0) {
-                quality = quality - 1
-            }
-            if (quality > 0) {
-                if (sellIn < 0) {
-                    quality = quality - 1
-                }
+            decrement()
+            if (sellIn < 0) {
+                decrement()
             }
         }
+    }
+}
+
+private fun Item.decrement() {
+    if (quality > 0) {
+        quality = quality - 1
+    }
+}
+
+private fun Item.increment() {
+    if (quality < 50) {
+        quality = quality + 1
     }
 }
 
