@@ -12,31 +12,34 @@ class GildedRose(
 }
 
 private fun Item.update() {
-    if (name == "Aged Brie") {
-        if (quality < 50) {
-            quality = quality + 1
+    when (name) {
+        "Aged Brie" -> {
+            if (quality < 50) {
+                quality = quality + 1
 
-        }
-    } else if (name == "Backstage passes to a TAFKAL80ETC concert") {
-        if (quality < 50) {
-            quality = quality + 1
-
-            if (sellIn < 11) {
-                if (quality < 50) {
-                    quality = quality + 1
-                }
-            }
-
-            if (sellIn < 6) {
-                if (quality < 50) {
-                    quality = quality + 1
-                }
             }
         }
-    } else {
-        if (quality > 0) {
-            if (name == "Sulfuras, Hand of Ragnaros") {
-            } else {
+        "Backstage passes to a TAFKAL80ETC concert" -> {
+            if (quality < 50) {
+                quality = quality + 1
+
+                if (sellIn < 11) {
+                    if (quality < 50) {
+                        quality = quality + 1
+                    }
+                }
+
+                if (sellIn < 6) {
+                    if (quality < 50) {
+                        quality = quality + 1
+                    }
+                }
+            }
+        }
+        "Sulfuras, Hand of Ragnaros" -> {
+        }
+        else -> {
+            if (quality > 0) {
                 quality = quality - 1
             }
         }
