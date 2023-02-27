@@ -21,7 +21,11 @@ private fun Item.update() {
         "Aged Brie" -> {
             if (quality < 50) {
                 quality = quality + 1
-
+            }
+            if (sellIn < 0) {
+                if (quality < 50) {
+                    quality = quality + 1
+                }
             }
         }
 
@@ -41,6 +45,9 @@ private fun Item.update() {
                     }
                 }
             }
+            if (sellIn < 0) {
+                quality = 0
+            }
         }
 
         "Sulfuras, Hand of Ragnaros" -> {
@@ -50,24 +57,10 @@ private fun Item.update() {
             if (quality > 0) {
                 quality = quality - 1
             }
-        }
-    }
-
-
-    if (sellIn < 0) {
-        when {
-            name == "Aged Brie" -> {
-                if (quality < 50) {
-                    quality = quality + 1
+            if (quality > 0) {
+                if (sellIn < 0) {
+                    quality = quality - 1
                 }
-            }
-            name == "Backstage passes to a TAFKAL80ETC concert" -> {
-                quality = quality - quality
-            }
-            name == "Sulfuras, Hand of Ragnaros" -> {
-            }
-            else -> if (quality > 0) {
-                quality = quality - 1
             }
         }
     }
