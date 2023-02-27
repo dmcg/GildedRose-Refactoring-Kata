@@ -23,16 +23,14 @@ private fun Item.update() {
         }
 
         "Backstage passes to a TAFKAL80ETC concert" -> {
-            degrade(-1)
-            if (sellIn < 10) {
-                degrade(-1)
-            }
-            if (sellIn < 5) {
-                degrade(-1)
-            }
-            if (sellIn < 0) {
-                quality = 0
-            }
+            degrade(
+                when {
+                    sellIn < 0 -> quality
+                    sellIn < 5 -> -3
+                    sellIn < 10 -> -2
+                    else -> -1
+                }
+            )
         }
 
         "Sulfuras, Hand of Ragnaros" -> {
