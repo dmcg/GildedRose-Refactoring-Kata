@@ -28,6 +28,10 @@ object passes : ItemType("Backstage passes to a TAFKAL80ETC concert") {
     }
 }
 
+object conjuredCake : ItemType("Conjured Mana Cake") {
+    override fun degradationFor(item: Item) = 2 * super.degradationFor(item)
+}
+
 object other : ItemType("")
 
 sealed class ItemType(val description: String) {
@@ -42,7 +46,7 @@ sealed class ItemType(val description: String) {
     protected open fun degradationFor(item: Item) = if (item.sellIn < 0) 2 else 1
 }
 
-val types = listOf(sulfuras, brie, passes, other)
+val types = listOf(sulfuras, brie, passes, conjuredCake)
 fun Item.type() = types.find { it.description == this.name } ?: other
 
 private fun Item.degradeBy(change: Int) {
