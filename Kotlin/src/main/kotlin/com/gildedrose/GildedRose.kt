@@ -12,18 +12,18 @@ class GildedRose(
 }
 
 private fun Item.update() {
-    if (name == "Sulfuras, Hand of Ragnaros") {
-    } else {
-        sellIn = sellIn - 1
-    }
+    age()
+    degrade()
+}
 
+private fun Item.degrade() {
     when (name) {
         "Aged Brie" -> {
-            degrade(if (sellIn < 0) -2 else -1)
+            degradeBy(if (sellIn < 0) -2 else -1)
         }
 
         "Backstage passes to a TAFKAL80ETC concert" -> {
-            degrade(
+            degradeBy(
                 when {
                     sellIn < 0 -> quality
                     sellIn < 5 -> -3
@@ -37,15 +37,22 @@ private fun Item.update() {
         }
 
         else -> {
-            degrade(
+            degradeBy(
                 if (sellIn < 0) 2 else 1
             )
         }
     }
 }
 
-private fun Item.degrade(i: Int) {
-    val newValue = quality - i
+private fun Item.age() {
+    when (name) {
+        "Sulfuras, Hand of Ragnaros" -> {}
+        else -> sellIn = sellIn - 1
+    }
+}
+
+private fun Item.degradeBy(change: Int) {
+    val newValue = quality - change
     quality = newValue.coerceIn(0, 50)
 }
 
