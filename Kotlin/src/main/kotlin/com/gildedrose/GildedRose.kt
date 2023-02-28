@@ -15,22 +15,26 @@ private fun Item.update() {
     degradeBy(degradationFor(this))
 }
 
+private val sulfuras = "Sulfuras, Hand of Ragnaros"
+private val brie = "Aged Brie"
+private val passes = "Backstage passes to a TAFKAL80ETC concert"
+
 private fun ageingFor(item: Item) =
     when (item.name) {
-        "Sulfuras, Hand of Ragnaros" -> 0
+        sulfuras -> 0
         else -> 1
     }
 
 private fun degradationFor(item: Item) =
     when (item.name) {
-        "Aged Brie" -> if (item.sellIn < 0) -2 else -1
-        "Backstage passes to a TAFKAL80ETC concert" -> when {
+        brie -> if (item.sellIn < 0) -2 else -1
+        passes -> when {
             item.sellIn < 0 -> item.quality
             item.sellIn < 5 -> -3
             item.sellIn < 10 -> -2
             else -> -1
         }
-        "Sulfuras, Hand of Ragnaros" -> 0
+        sulfuras -> 0
         else -> if (item.sellIn < 0) 2 else 1
     }
 
