@@ -15,9 +15,15 @@ private fun Item.update() {
     degradeBy(degradationFor(this))
 }
 
-private val sulfuras = "Sulfuras, Hand of Ragnaros"
-private val brie = "Aged Brie"
-private val passes = "Backstage passes to a TAFKAL80ETC concert"
+private val sulfuras = ItemType.sulfuras.description
+private val brie = ItemType.brie.description
+private val passes = ItemType.passes.description
+
+enum class ItemType(val description: String) {
+    sulfuras("Sulfuras, Hand of Ragnaros"),
+    brie("Aged Brie"),
+    passes("Backstage passes to a TAFKAL80ETC concert"),
+}
 
 private fun ageingFor(item: Item) =
     when (item.name) {
