@@ -12,18 +12,17 @@ class GildedRose(
 }
 
 private fun Item.update() {
-    age()
+    sellIn -= ageingFor(this)
     degradeBy(
         degradationFor(this)
     )
 }
 
-private fun Item.age() {
-    when (name) {
-        "Sulfuras, Hand of Ragnaros" -> {}
-        else -> sellIn = sellIn - 1
+private fun ageingFor(item: Item) =
+    when (item.name) {
+        "Sulfuras, Hand of Ragnaros" -> 0
+        else -> 1
     }
-}
 
 private fun degradationFor(item: Item) =
     when (item.name) {
