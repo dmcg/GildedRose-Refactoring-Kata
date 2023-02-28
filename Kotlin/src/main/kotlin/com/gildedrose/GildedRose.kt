@@ -7,14 +7,14 @@ class GildedRose(
 ) {
     fun updateQuality() {
         for (item in items) {
-            item.update()
+            item.type().update(item)
         }
     }
 }
 
-private fun Item.update() {
-    sellIn -= ageingFor(this)
-    degradeBy(degradationFor(this))
+private fun ItemType.update(item: Item) {
+    item.sellIn -= ageingFor()
+    item.degradeBy(degradationFor(item))
 }
 
 enum class ItemType(val description: String) {
@@ -27,15 +27,15 @@ enum class ItemType(val description: String) {
 fun Item.type() = ItemType.values().find { it.description == this.name } ?: other
 
 
-private fun ageingFor(item: Item) =
-    if (item.type() == sulfuras) 0
-    else 1
+private fun ItemType.ageingFor() =
+    when (this) {
+        sulfuras -> 0
+        else -> 1
+    }
 
-private fun degradationFor(item: Item) =
-    when(item.type()) {
-        brie -> {
-            if (item.sellIn < 0) -2 else -1
-        }
+private fun ItemType.degradationFor(item: Item) =
+    when(this) {
+        brie -> if (item.sellIn < 0) -2 else -1
         passes -> when {
             item.sellIn < 0 -> item.quality
             item.sellIn < 5 -> -3
