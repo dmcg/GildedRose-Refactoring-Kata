@@ -23,25 +23,30 @@ enum class ItemType(val description: String) {
     passes("Backstage passes to a TAFKAL80ETC concert"),
 }
 
+fun Item.type() = ItemType.values().find { it.description == this.name }
+private fun isPasses(item: Item) = item.type() == passes
+
+private fun isBrie(item: Item) = item.type() == brie
+
+private fun isSulfurus(item: Item) = item.type() == sulfuras
+
+
 private fun ageingFor(item: Item) =
-    when (item.name) {
-        sulfuras.description -> 0
-        else -> 1
-    }
+    if (isSulfurus(item)) 0
+    else 1
 
 private fun degradationFor(item: Item) =
-    when (item.name) {
-        brie.description -> if (item.sellIn < 0) -2 else -1
-        passes.description -> when {
-            item.sellIn < 0 -> item.quality
-            item.sellIn < 5 -> -3
-            item.sellIn < 10 -> -2
-            else -> -1
-        }
-
-        sulfuras.description -> 0
-        else -> if (item.sellIn < 0) 2 else 1
+    if (isBrie(item)) {
+        if (item.sellIn < 0) -2 else -1
+    } else if (isPasses(item)) when {
+        item.sellIn < 0 -> item.quality
+        item.sellIn < 5 -> -3
+        item.sellIn < 10 -> -2
+        else -> -1
     }
+    else if (isSulfurus(item)) 0
+    else if (item.sellIn < 0) 2 else 1
+
 
 
 private fun Item.degradeBy(change: Int) {
