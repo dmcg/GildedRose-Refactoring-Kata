@@ -1,7 +1,5 @@
 package com.gildedrose
 
-import com.gildedrose.ItemType.*
-
 class GildedRose(
     private val items: List<Item>
 ) {
@@ -12,11 +10,13 @@ class GildedRose(
     }
 }
 
-enum class ItemType(val description: String) {
-    sulfuras("Sulfuras, Hand of Ragnaros"),
-    brie("Aged Brie"),
-    passes("Backstage passes to a TAFKAL80ETC concert"),
-    other("");
+object sulfuras : ItemType("Sulfuras, Hand of Ragnaros")
+object brie : ItemType("Aged Brie")
+object passes : ItemType("Backstage passes to a TAFKAL80ETC concert")
+object other : ItemType("")
+
+
+sealed class ItemType(val description: String) {
 
     fun update(item: Item) {
         item.sellIn -= ageingFor()
@@ -43,7 +43,8 @@ enum class ItemType(val description: String) {
         }
 }
 
-fun Item.type() = ItemType.values().find { it.description == this.name } ?: other
+val types = listOf(sulfuras, brie, passes, other)
+fun Item.type() = types.find { it.description == this.name } ?: other
 
 private fun Item.degradeBy(change: Int) {
     val newValue = quality - change
