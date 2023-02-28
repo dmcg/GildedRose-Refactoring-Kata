@@ -1,5 +1,7 @@
 package com.gildedrose
 
+import com.gildedrose.ItemType.*
+
 class GildedRose(
     private val items: List<Item>
 ) {
@@ -15,10 +17,6 @@ private fun Item.update() {
     degradeBy(degradationFor(this))
 }
 
-private val sulfuras = ItemType.sulfuras.description
-private val brie = ItemType.brie.description
-private val passes = ItemType.passes.description
-
 enum class ItemType(val description: String) {
     sulfuras("Sulfuras, Hand of Ragnaros"),
     brie("Aged Brie"),
@@ -27,20 +25,21 @@ enum class ItemType(val description: String) {
 
 private fun ageingFor(item: Item) =
     when (item.name) {
-        sulfuras -> 0
+        sulfuras.description -> 0
         else -> 1
     }
 
 private fun degradationFor(item: Item) =
     when (item.name) {
-        brie -> if (item.sellIn < 0) -2 else -1
-        passes -> when {
+        brie.description -> if (item.sellIn < 0) -2 else -1
+        passes.description -> when {
             item.sellIn < 0 -> item.quality
             item.sellIn < 5 -> -3
             item.sellIn < 10 -> -2
             else -> -1
         }
-        sulfuras -> 0
+
+        sulfuras.description -> 0
         else -> if (item.sellIn < 0) 2 else 1
     }
 
