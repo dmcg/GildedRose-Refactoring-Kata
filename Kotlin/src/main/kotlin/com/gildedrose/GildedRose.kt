@@ -13,35 +13,9 @@ class GildedRose(
 
 private fun Item.update() {
     age()
-    degrade()
-}
-
-private fun Item.degrade() {
-    when (name) {
-        "Aged Brie" -> {
-            degradeBy(if (sellIn < 0) -2 else -1)
-        }
-
-        "Backstage passes to a TAFKAL80ETC concert" -> {
-            degradeBy(
-                when {
-                    sellIn < 0 -> quality
-                    sellIn < 5 -> -3
-                    sellIn < 10 -> -2
-                    else -> -1
-                }
-            )
-        }
-
-        "Sulfuras, Hand of Ragnaros" -> {
-        }
-
-        else -> {
-            degradeBy(
-                if (sellIn < 0) 2 else 1
-            )
-        }
-    }
+    degradeBy(
+        degradationFor(this)
+    )
 }
 
 private fun Item.age() {
@@ -51,9 +25,34 @@ private fun Item.age() {
     }
 }
 
+private fun degradationFor(item: Item) =
+    when (item.name) {
+        "Aged Brie" -> {
+            if (item.sellIn < 0) -2 else -1
+        }
+
+        "Backstage passes to a TAFKAL80ETC concert" -> {
+            when {
+                item.sellIn < 0 -> item.quality
+                item.sellIn < 5 -> -3
+                item.sellIn < 10 -> -2
+                else -> -1
+            }
+        }
+
+        "Sulfuras, Hand of Ragnaros" -> {
+            0
+        }
+
+        else -> {
+            if (item.sellIn < 0) 2 else 1
+        }
+    }
+
+
 private fun Item.degradeBy(change: Int) {
     val newValue = quality - change
-    quality = newValue.coerceIn(0, 50)
+    quality = newValue.coerceIn(0, Math.max(50, quality))
 }
 
 
