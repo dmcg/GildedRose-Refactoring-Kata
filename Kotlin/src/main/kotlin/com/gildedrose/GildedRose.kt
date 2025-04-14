@@ -1,5 +1,7 @@
 package com.gildedrose
 
+import kotlin.math.max
+
 class GildedRose(
     private val items: List<Item>
 ) {
@@ -10,16 +12,34 @@ class GildedRose(
     }
 }
 
-object sulfuras : ItemType("Sulfuras, Hand of Ragnaros") {
-    override fun ageingFor() = 0
+val types = listOf(Sulfuras, Brie, Passes, ConjuredCake)
+fun Item.type() = types.find { it.description == this.name } ?: Other
+
+
+open class ItemType(val description: String) {
+
+    fun update(item: Item) {
+        item.sellIn -= ageing()
+        item.quality = (item.quality - degradationFor(item))
+            .coerceIn(0, max(50, item.quality))
+    }
+
+    protected open fun ageing() = 1
+
+    protected open fun degradationFor(item: Item) = if (item.sellIn < 0) 2 else 1
+}
+
+
+object Sulfuras : ItemType("Sulfuras, Hand of Ragnaros") {
+    override fun ageing() = 0
     override fun degradationFor(item: Item) = 0
 }
 
-object brie : ItemType("Aged Brie") {
+object Brie : ItemType("Aged Brie") {
     override fun degradationFor(item: Item) = if (item.sellIn < 0) -2 else -1
 }
 
-object passes : ItemType("Backstage passes to a TAFKAL80ETC concert") {
+object Passes : ItemType("Backstage passes to a TAFKAL80ETC concert") {
     override fun degradationFor(item: Item) = when {
         item.sellIn < 0 -> item.quality
         item.sellIn < 5 -> -3
@@ -28,30 +48,8 @@ object passes : ItemType("Backstage passes to a TAFKAL80ETC concert") {
     }
 }
 
-object conjuredCake : ItemType("Conjured Mana Cake") {
+object ConjuredCake : ItemType("Conjured Mana Cake") {
     override fun degradationFor(item: Item) = 2 * super.degradationFor(item)
 }
 
-object other : ItemType("")
-
-sealed class ItemType(val description: String) {
-
-    fun update(item: Item) {
-        item.sellIn -= ageingFor()
-        item.degradeBy(degradationFor(item))
-    }
-
-    protected open fun ageingFor() = 1
-
-    protected open fun degradationFor(item: Item) = if (item.sellIn < 0) 2 else 1
-}
-
-val types = listOf(sulfuras, brie, passes, conjuredCake)
-fun Item.type() = types.find { it.description == this.name } ?: other
-
-private fun Item.degradeBy(change: Int) {
-    val newValue = quality - change
-    quality = newValue.coerceIn(0, Math.max(50, quality))
-}
-
-
+object Other : ItemType("")
